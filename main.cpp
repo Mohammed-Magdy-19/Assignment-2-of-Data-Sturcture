@@ -223,6 +223,7 @@ int main() {
     //close id
     cout<<"\n-------------------------------\n";
     tree.findclose(24);
+    //Height
     cout<<"\n--------------------------------\n";
     cout<<"Tree Height= "<<tree.gethight()<<endl;
 
