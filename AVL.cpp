@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include<string>
 #include <algorithm>
 #include <cmath>
@@ -11,11 +11,14 @@ class Node {
     public :
     int id;
     string title;
+    string author;
+
     Node*right, *left;
     int height;
-    Node(int ID, string t) {
+    Node(int ID, string t , string a) {
         this->id= ID;
         this->title=t;
+        this->author = a;
         right=NULL;
         left=NULL;
         height=1;
@@ -63,14 +66,14 @@ class Node {
     }
 
     // Function Insert
-    Node* insert(Node* n, int id, string title) {
-        if(n==NULL) return new Node(id , title);
+    Node* insert(Node* n, int id, string title, string author) {
+        if(n==NULL) return new Node(id, title, author);
         if (id < n->id) {
-           n->left= insert(n->left,id , title);
+           n->left= insert(n->left,id , title , author);
 
         }
         else if (id > n->id) {
-            n->right= insert(n->right, id , title);
+            n->right= insert(n->right, id , title , author);
         }
         // not duplicte ids
         else {
@@ -152,6 +155,8 @@ class Node {
             Node *temp= MinNode(n->right);
             n->id=temp->id;
             n->title= temp->title;
+            n->author = temp->author;
+
             n->right= Delete(n->right,temp->id);
         }
       
@@ -206,47 +211,100 @@ class Node {
         }
     }
 
-    /*void inorder(Node* n) {
-        if (n==NULL) return ;
+    // RANGE SEARCH
 
-        inorder(n->left);
-        cout << "ID: "
-            << n->id
-            << " | Title: "
-            << n->title
-            << endl;
+    void printRange(Node* n, int low, int high) {
 
-        inorder(n->right);
+        if (n == NULL)
+            return;
 
-    }*/
+        if (low < n->id) {
+
+            printRange(n->left, low, high);
+        }
+
+        if (n->id >= low && n->id <= high) {
+
+            cout << "ID: "
+                << n->id
+                << " | Title: "
+                << n->title
+                << " | Author: "
+                << n->author
+                << endl;
+        }
+
+        if (high > n->id) {
+
+            printRange(n->right, low, high);
+        }
+    }
+
+    
     int getMax(Node* n) {
         if (!n) return 0;
 
         int lenId = to_string(n->id).size();
         int lenTitle = n->title.size();
+        int lenAuthor = n->author.size();
 
-        return max({ lenId, lenTitle, getMax(n->left), getMax(n->right) });
+
+        return max({ lenId, lenTitle, lenAuthor ,getMax(n->left), getMax(n->right) });
     }
 
-    int idW, titleW;
+    int idW, titleW, authorW;
 
     void buildWidth(Node* n) {
         int maxLen = getMax(n);
         idW = max(4, maxLen);
         titleW = max(10, maxLen + 5);
+        authorW = max(10, maxLen + 5);
     }
 
     void printLine() {
+
         cout << "+";
-        for (int i = 0; i < idW + 2; i++) cout << "-";
+
+        for (int i = 0; i < idW + 2; i++)
+            cout << "-";
+
         cout << "+";
-        for (int i = 0; i < titleW + 2; i++) cout << "-";
+
+        for (int i = 0; i < titleW + 2; i++)
+            cout << "-";
+
+        cout << "+";
+
+        for (int i = 0; i < authorW + 2; i++)
+            cout << "-";
+
         cout << "+\n";
     }
 
-    void printRow(string id, string title) {
-        cout << "| " << left << setw(idW) << id
-            << " | " << left << setw(titleW) << title << " |\n";
+
+
+    void printRow(string id,
+        string title,
+        string author) {
+
+        cout << "| "
+            << left
+            << setw(idW)
+            << id
+
+            << " | "
+
+            << left
+            << setw(titleW)
+            << title
+
+            << " | "
+
+            << left
+            << setw(authorW)
+            << author
+
+            << " |\n";
     }
     void inorder(Node* n) {
         if (!n) return;
@@ -255,14 +313,14 @@ class Node {
             buildWidth(n);
 
             printLine();
-            printRow("ID", "Title");
+            printRow("ID", "Title" , "Author");
             printLine();
 
             printed = true;
         }
 
         inorder(n->left);
-        printRow(to_string(n->id), n->title);
+        printRow(to_string(n->id), n->title, n->author);
         inorder(n->right);
     }
 
@@ -316,8 +374,8 @@ class Node {
 
            for (int i = 0; i < nodes; i++) {
 
-               Node* node = q.front();
                if (q.empty()) break;
+               Node* node = q.front();
                q.pop();
 
                currentLevel.push_back(node);
@@ -393,7 +451,8 @@ int main()
         cout << "  [4] Display Books (Inorder)\n";
         cout << "  [5] Find Closest ID\n";
         cout << "  [6] Print Tree\n";
-        cout << "  [7] Exit\n";
+        cout << "  [7] Find Books In Range\n";
+        cout << "  [8] Exit\n";
 
         cout << "=====================================\n";
         cout << "Enter your choice: ";
@@ -405,6 +464,7 @@ int main()
 
             int id;
             string title;
+            string author;
 
             cout << "Enter Book ID: ";
             cin >> id;
@@ -414,6 +474,9 @@ int main()
             cout << "Enter Book Title: ";
             getline(cin, title);
 
+            cout << "Enter Author Name: ";
+            getline(cin, author);
+
             Node* noDu = Search(root, id);
 
             if (noDu != NULL) {
@@ -421,7 +484,8 @@ int main()
                 cout << "Error: Book ID already exists!\n";
             }
             else {
-                root = insert(root, id, title);
+                root = insert(root, id, title,
+                    author);
                 cout << endl;
                 cout << "Book inserted successfully.\n";
             }
@@ -471,6 +535,9 @@ int main()
 
                 cout << "Title: "
                     << result->title
+                    << endl;
+                cout << "Author: "
+                    << result->author
                     << endl;
             }
 
@@ -532,8 +599,21 @@ int main()
 
             printPrettyTree(root);
         }
+        else if (choice == 7) {
+            int low, high;
 
-    } while (choice != 7);
+            cout << "Enter lower ID: ";
+            cin >> low;
+
+            cout << "Enter higher ID: ";
+            cin >> high;
+
+            cout << "\nBooks in Range:\n";
+
+            printRange(root, low, high);
+        }
+
+    } while (choice != 8);
 
     return 0;
 }
