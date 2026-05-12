@@ -9,6 +9,7 @@ void EmergencyRoomPQ::printPatientData(Patient patient) const
     cout << "Name: " << patient.name << endl;
     cout << "Arrival time: " << patient.arrivalTime << endl;
     cout << "severity: " << patient.severity << endl;
+    cout << endl;
 }
 
 EmergencyRoomPQ::EmergencyRoomPQ()
