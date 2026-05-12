@@ -1,8 +1,7 @@
-#ifndef EMERGENCYROOM_H
-#define EMERGENCYROOM_H
+#ifndef PATIENT_H
+#define PATIENT_H
 
 #include <string>
-#include <vector>
 
 struct Patient
 {
@@ -35,26 +34,5 @@ struct Patient
         return severity > other.severity;
     }
 };
-
-
-
-class EmergencyRoom
-{
-private:
-    std::vector<Patient> heap;
-    void heapifyUp(int childIndex);
-    void heapifyDown(int parentIndex);
-    void printPatientData(Patient patient) const;
-
-public:
-    EmergencyRoom(/* args */);
-    void insert(Patient newPatient);
-    void treatNext();
-    void viewNext() const;
-    void updateSeverity(int patientId, int newSeverity);
-    void displayAllPatients() const;
-    ~EmergencyRoom();
-};
-
 
 #endif

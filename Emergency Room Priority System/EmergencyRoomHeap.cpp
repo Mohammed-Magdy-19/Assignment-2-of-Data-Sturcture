@@ -1,4 +1,4 @@
-#include "EmergencyRoom.h"
+#include "EmergencyRoomHeap.h"
 #include <algorithm>
 #include <stdexcept>
 #include <iostream>
@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void EmergencyRoom::heapifyUp(int childIndex)
+void EmergencyRoomHeap::heapifyUp(int childIndex)
 {
     if (childIndex <= 0)
         return;
@@ -21,7 +21,7 @@ void EmergencyRoom::heapifyUp(int childIndex)
     }
 }
 
-void EmergencyRoom::heapifyDown(int parentIndex)
+void EmergencyRoomHeap::heapifyDown(int parentIndex)
 {
     int leftChildIndex = 2 * parentIndex + 1;  // l = 2i (for 1's indexing basis)
     int rightChildIndex = 2 * parentIndex + 2; // r = 2i + 1 (for 1's indexing basis)
@@ -47,7 +47,7 @@ void EmergencyRoom::heapifyDown(int parentIndex)
     }
 }
 
-void EmergencyRoom::printPatientData(Patient patient) const
+void EmergencyRoomHeap::printPatientData(Patient patient) const
 {
     cout << "id: " << patient.id << endl;
     cout << "Name: " << patient.name << endl;
@@ -55,15 +55,15 @@ void EmergencyRoom::printPatientData(Patient patient) const
     cout << "severity: " << patient.severity << endl;
 }
 
-EmergencyRoom::EmergencyRoom() {}
+EmergencyRoomHeap::EmergencyRoomHeap() {}
 
-void EmergencyRoom::insert(Patient newPatient)
+void EmergencyRoomHeap::insert(Patient newPatient)
 {
     heap.push_back(newPatient);
     heapifyUp((int)heap.size() - 1);
 }
 
-void EmergencyRoom::treatNext()
+void EmergencyRoomHeap::treatNext()
 {
     if (heap.empty())
     {
@@ -85,7 +85,7 @@ void EmergencyRoom::treatNext()
     cout << "========================================================\n";
 }
 
-void EmergencyRoom::viewNext() const
+void EmergencyRoomHeap::viewNext() const
 {
     if (heap.empty())
     {
@@ -101,7 +101,7 @@ void EmergencyRoom::viewNext() const
     cout << "========================================================\n";
 }
 
-void EmergencyRoom::updateSeverity(int patientId, int newSeverity)
+void EmergencyRoomHeap::updateSeverity(int patientId, int newSeverity)
 {
     for (int i = 0; i < (int)heap.size(); i++)
     {
@@ -126,10 +126,13 @@ void EmergencyRoom::updateSeverity(int patientId, int newSeverity)
     }
 }
 
-void EmergencyRoom::displayAllPatients() const
+void EmergencyRoomHeap::displayAllPatients() const
 {
     if (heap.empty())
+    {
+        cout << "The Emergency room is empty\n";
         return;
+    }
 
     cout << "\n========================================================\n";
     cout << "========================Patients========================\n";
@@ -157,4 +160,4 @@ void EmergencyRoom::displayAllPatients() const
     cout << "========================================================\n";
 }
 
-EmergencyRoom::~EmergencyRoom() {}
+EmergencyRoomHeap::~EmergencyRoomHeap() {}
